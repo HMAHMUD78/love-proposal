@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>For Someone Special 💖</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+<style>
+
+/* ===============================
+   GLOBAL STYLES
+=================================*/
+
+:root{
+--primary:#ff2d75;
+--secondary:#ff6fa5;
+--glass:rgba(255,255,255,0.15);
+--text-dark:#2d2d2d;
+}
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Poppins',sans-serif;
+}
+
+body{
+min-height:100vh;
+display:flex;
+justify-content:center;
+align-items:center;
+background:linear-gradient(-45deg,#ff1e6c,#ff4da6,#ff85c1,#ff2d75);
+background-size:400% 400%;
+animation:gradientBG 12s ease infinite;
+overflow:hidden;
+padding:20px;
+}
+
+@keyframes gradientBG{
+0%{background-position:0% 50%;}
+50%{background-position:100% 50%;}
+100%{background-position:0% 50%;}
+}
+
+/* ===============================
+   CONTAINER
+=================================*/
+
+.container{
+width:100%;
+max-width:480px;
+background:var(--glass);
+backdrop-filter:blur(25px);
+border-radius:30px;
+padding:35px 30px;
+text-align:center;
+box-shadow:0 25px 70px rgba(0,0,0,0.25);
+position:relative;
+color:white;
+}
+
+/* ===============================
+   TYPOGRAPHY
+=================================*/
+
+h1{
+font-weight:700;
+font-size:24px;
+margin-bottom:10px;
+}
+
+.subtitle{
+font-size:14px;
+opacity:0.9;
+min-height:40px;
+margin-bottom:20px;
+}
+
+/* ===============================
+   SLIDESHOW
+=================================*/
+
+.slideshow{
+width:100%;
+height:220px;
+border-radius:20px;
+overflow:hidden;
+position:relative;
+margin-bottom:20px;
+}
+
+.slide{
+position:absolute;
+width:100%;
+height:100%;
+object-fit:cover;
+opacity:0;
+transition:opacity 1s ease-in-out;
+}
+
+.slide.active{
+opacity:1;
+}
+
+/* ===============================
+   QUESTION + BUTTONS
+=================================*/
+
+.question{
+font-size:18px;
+font-weight:600;
+margin-bottom:20px;
+}
+
+.buttons{
+display:flex;
+justify-content:center;
+gap:25px;
+}
+
+button{
+padding:12px 28px;
+border:none;
+border-radius:40px;
+font-weight:600;
+cursor:pointer;
+transition:0.3s ease;
+}
+
+#yesBtn{
+background:white;
+color:var(--primary);
+}
+
+#noBtn{
+background:rgba(255,255,255,0.4);
+color:white;
+}
+
+#yesBtn:hover{
+transform:scale(1.1);
+box-shadow:0 10px 25px rgba(0,0,0,0.3);
+}
+
+.note{
+margin-top:20px;
+font-size:14px;
+min-height:24px;
+}
+
+/* ===============================
+   SUCCESS
+=================================*/
+
+.success{
+margin-top:20px;
+font-weight:700;
+font-size:18px;
+display:none;
+}
+
+/* ===============================
+   RESPONSIVE
+=================================*/
+
+@media(max-width:500px){
+.container{padding:25px 20px;}
+.slideshow{height:180px;}
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h1 id="title"></h1>
+<div class="subtitle" id="subtitle"></div>
+
+<div class="slideshow" id="slideshow"></div>
+
+<div class="question">Will you be my Valentine? 💖</div>
+
+<div class="buttons">
+<button id="yesBtn">Yes 💕</button>
+<button id="noBtn">No 😢</button>
+</div>
+
+<div class="note" id="note"></div>
+<div class="success" id="success">You said YES!!! 💖</div>
+
+</div>
+
+<audio id="bgMusic" loop></audio>
+
+<script>
+
+/* ======================================
+   🔧 EDITABLE CONFIG SECTION
+======================================*/
+
+const CONFIG = {
+name:"Your Queen 👑",
+
+notes:[
+"Are you sure? 🥺",
+"Think again 😌",
+"I can bring chocolate 🍫",
+"I promise unlimited hugs 🤗",
+"Okay okay… last chance 😏"
+],
+
+images:[
+"https://images.unsplash.com/photo-1518199266791-5375a83190b7",
+"https://images.unsplash.com/photo-1516589091380-5d8e87df6999",
+"https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e"
+],
+
+songs:[
+"https://www.youtube.com/watch?v=5GCfYLguTIs&list=RD5GCfYLguTIs&start_radio=1"
+]
+};
+
+/* ======================================
+   INIT
+======================================*/
+
+document.getElementById("title").innerText="Hey "+CONFIG.name+" 💖";
+document.getElementById("subtitle").innerText="From the moment we met, everything changed... ✨";
+
+/* ======================================
+   SLIDESHOW
+======================================*/
+
+const slideshow=document.getElementById("slideshow");
+
+CONFIG.images.forEach((src,i)=>{
+let img=document.createElement("img");
+img.src=src;
+img.classList.add("slide");
+if(i==0) img.classList.add("active");
+slideshow.appendChild(img);
+});
+
+let currentSlide=0;
+setInterval(()=>{
+let slides=document.querySelectorAll(".slide");
+slides[currentSlide].classList.remove("active");
+currentSlide=(currentSlide+1)%slides.length;
+slides[currentSlide].classList.add("active");
+},4000);
+
+/* ======================================
+   MUSIC
+======================================*/
+
+const bgMusic=document.getElementById("bgMusic");
+bgMusic.src=CONFIG.songs[0];
+
+document.body.addEventListener("click",()=>{
+if(bgMusic.paused) bgMusic.play();
+},{once:true});
+
+/* ======================================
+   BUTTON LOGIC
+======================================*/
+
+const yesBtn=document.getElementById("yesBtn");
+const noBtn=document.getElementById("noBtn");
+const note=document.getElementById("note");
+const success=document.getElementById("success");
+
+let noCount=0;
+
+noBtn.addEventListener("click",()=>{
+noCount++;
+yesBtn.style.transform=`scale(${1+noCount*0.15})`;
+note.innerText=CONFIG.notes[Math.min(noCount-1,CONFIG.notes.length-1)];
+});
+
+yesBtn.addEventListener("click",()=>{
+success.style.display="block";
+note.innerText="";
+yesBtn.style.display="none";
+noBtn.style.display="none";
+launchPremiumCelebration();
+});
+
+/* ======================================
+   PREMIUM CELEBRATION EFFECT
+======================================*/
+
+function launchPremiumCelebration(){
+
+for(let i=0;i<40;i++){
+let el=document.createElement("div");
+el.innerHTML="💖";
+el.style.position="fixed";
+el.style.left="50%";
+el.style.top="50%";
+el.style.fontSize=Math.random()*20+20+"px";
+el.style.transform=`translate(-50%,-50%) rotate(${Math.random()*360}deg)`;
+el.style.transition="all 1.5s ease-out";
+document.body.appendChild(el);
+
+setTimeout(()=>{
+el.style.left=Math.random()*100+"vw";
+el.style.top=Math.random()*100+"vh";
+el.style.opacity=0;
+},50);
+
+setTimeout(()=>el.remove(),1500);
+}
+
+}
+
+</script>
+
+</body>
+</html>
